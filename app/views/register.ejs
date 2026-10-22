@@ -1,12 +1,28 @@
 <%- include('partials/header') %>
-<span class="eyebrow">Bắt đầu miễn phí</span>
-<h1>Đăng ký tài khoản</h1>
-<p class="muted">Tạo tài khoản để tham gia các bài thi và lưu lại kết quả.</p>
-<% if (error) { %><div class="alert"><%= error %></div><% } %>
-<form method="post" action="/register" class="form">
-  <label>Tên đăng nhập <input name="username" required pattern="[a-zA-Z0-9_]{3,30}"></label>
-  <label>Mật khẩu (tối thiểu 8 ký tự) <input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
-  <button class="btn" type="submit">Đăng ký</button>
-  <p class="muted auth-hint">Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
-</form>
+<section class="auth-layout">
+  <div class="auth-copy">
+    <span class="eyebrow">Bắt đầu miễn phí</span>
+    <h1>Biến sự tò mò thành kiến thức.</h1>
+    <p class="muted">Tạo tài khoản để tham gia các bài thi, theo dõi điểm số và thấy mình tiến bộ qua từng lần thử.</p>
+    <div class="auth-promo register-promo" aria-hidden="true">
+      <span class="promo-spark">✦</span>
+      <span class="promo-label">Bắt đầu hành trình</span>
+      <div class="promo-question">Một tài khoản nhỏ, thật nhiều điều để khám phá.</div>
+      <div class="promo-answers"><i class="active"></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div class="auth-panel">
+    <div class="auth-panel-heading">
+      <span class="auth-panel-icon" aria-hidden="true">✦</span>
+      <div><h2>Tạo tài khoản</h2><p class="muted">Chỉ mất một phút để bắt đầu.</p></div>
+    </div>
+    <% if (error) { %><div class="alert"><%= error %></div><% } %>
+    <form method="post" action="/register" class="form">
+      <label>Tên đăng nhập <input name="username" required pattern="[a-zA-Z0-9_]{3,30}" autocomplete="username"></label>
+      <label>Mật khẩu (tối thiểu 8 ký tự) <input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+      <button class="btn" type="submit">Tạo tài khoản <span aria-hidden="true">&nbsp;→</span></button>
+      <p class="muted auth-hint">Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+    </form>
+  </div>
+</section>
 <%- include('partials/footer') %>

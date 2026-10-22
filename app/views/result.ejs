@@ -1,10 +1,28 @@
 <%- include('partials/header') %>
-<h1>Kết quả: <%= attempt.title %></h1>
-<div class="score">Điểm: <strong><%= attempt.score %> / <%= attempt.total %></strong>
-  (<%= attempt.total ? Math.round(attempt.score * 100 / attempt.total) : 0 %>%)</div>
+<section class="result-hero">
+  <div class="result-copy">
+    <span class="eyebrow">Bài làm đã hoàn thành</span>
+    <h1>Kết quả của bạn</h1>
+    <p><%= attempt.title %></p>
+    <span class="result-message"><%= attempt.total && attempt.score / attempt.total >= .7 ? 'Làm tốt lắm! Hãy tiếp tục phát huy.' : 'Cố gắng thêm nhé, mỗi lần luyện tập đều giúp bạn tiến bộ.' %></span>
+  </div>
+  <div class="result-score-card">
+    <span class="result-score-label">Điểm số</span>
+    <strong><%= attempt.score %><span> / <%= attempt.total %></span></strong>
+    <span class="result-percent"><%= attempt.total ? Math.round(attempt.score * 100 / attempt.total) : 0 %>% chính xác</span>
+    <progress class="result-progress" value="<%= attempt.total ? attempt.score : 0 %>" max="<%= attempt.total || 1 %>" aria-label="Tỷ lệ câu trả lời đúng"></progress>
+  </div>
+</section>
+<div class="section-heading result-section-heading">
+  <div><span class="eyebrow">Xem lại bài làm</span><h2>Chi tiết đáp án</h2></div>
+  <span class="badge"><%= details.length %> câu hỏi</span>
+</div>
 <% details.forEach((d, i) => { %>
   <div class="card <%= d.chosen_option === d.correct_option ? 'right' : 'wrong' %>">
-    <p><strong>Câu <%= i + 1 %>.</strong> <%= d.content %></p>
+    <div class="question-heading">
+      <span class="question-number"><%= String(i + 1).padStart(2, '0') %></span>
+      <p><%= d.content %></p>
+    </div>
     <% ['A','B','C','D'].forEach(o => { %>
       <div class="opt <%= o === d.correct_option ? 'is-correct' : '' %> <%= (o === d.chosen_option && o !== d.correct_option) ? 'is-wrong' : '' %>">
         <%= o %>. <%= d['option_' + o.toLowerCase()] %>
@@ -15,5 +33,5 @@
     <% if (!d.chosen_option) { %><p class="muted">Bạn chưa trả lời câu này.</p><% } %>
   </div>
 <% }) %>
-<a class="btn" href="/">Về trang chủ</a>
+<a class="btn" href="/">Về danh sách bài thi <span aria-hidden="true">&nbsp;→</span></a>
 <%- include('partials/footer') %>

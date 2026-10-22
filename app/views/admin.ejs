@@ -1,15 +1,25 @@
 <%- include('partials/header') %>
-<h1>Quản trị bài thi</h1>
+<div class="page-heading">
+  <div><span class="eyebrow">Không gian quản lý</span><h1>Quản trị bài thi</h1><p class="muted">Tạo đề mới, quản lý câu hỏi và theo dõi hoạt động.</p></div>
+  <span class="page-heading-mark" aria-hidden="true">✦</span>
+</div>
+<div class="admin-stats">
+  <article class="stat-card"><span class="stat-icon stat-purple" aria-hidden="true">Q</span><span class="stat-label">Bài thi</span><strong><%= quizzes.length %></strong><span class="stat-note">đề đang quản lý</span></article>
+  <article class="stat-card"><span class="stat-icon stat-green" aria-hidden="true">?</span><span class="stat-label">Câu hỏi</span><strong><%= quizzes.reduce((sum, z) => sum + Number(z.num_questions || 0), 0) %></strong><span class="stat-note">trong tất cả đề thi</span></article>
+  <article class="stat-card"><span class="stat-icon stat-orange" aria-hidden="true">↗</span><span class="stat-label">Lượt thi gần đây</span><strong><%= recent.length %></strong><span class="stat-note">tối đa 10 lượt mới nhất</span></article>
+</div>
 <form method="post" action="/admin/quiz" class="form">
-  <h3>Tạo bài thi mới</h3>
+  <span class="eyebrow">Bắt đầu một thử thách mới</span>
+  <h2 class="form-title">Tạo bài thi mới</h2>
   <label>Tiêu đề <input name="title" required maxlength="200"></label>
   <label>Mô tả <input name="description" maxlength="1000"></label>
   <label>Thời gian (phút) <input type="number" name="duration_minutes" value="15" min="1" max="180"></label>
   <button class="btn" type="submit">Tạo bài thi</button>
 </form>
-<h2>Các bài thi</h2>
+<div class="section-heading admin-section-heading"><div><span class="eyebrow">Thư viện đề thi</span><h2>Các bài thi</h2></div><span class="badge"><%= quizzes.length %> đề</span></div>
 <table>
-  <tr><th>ID</th><th>Tiêu đề</th><th>Số câu</th><th>Lượt thi</th><th>Thao tác</th></tr>
+  <thead><tr><th>ID</th><th>Tiêu đề</th><th>Số câu</th><th>Lượt thi</th><th>Thao tác</th></tr></thead>
+  <tbody>
   <% quizzes.forEach(z => { %>
   <tr>
     <td><%= z.id %></td><td><%= z.title %></td><td><%= z.num_questions %></td><td><%= z.num_attempts %></td>
@@ -19,12 +29,15 @@
     </td>
   </tr>
   <% }) %>
+  </tbody>
 </table>
-<h2>10 lượt thi gần nhất</h2>
+<div class="section-heading admin-section-heading"><div><span class="eyebrow">Hoạt động</span><h2>10 lượt thi gần nhất</h2></div></div>
 <table>
-  <tr><th>Người thi</th><th>Bài thi</th><th>Điểm</th><th>Thời gian</th></tr>
+  <thead><tr><th>Người thi</th><th>Bài thi</th><th>Điểm</th><th>Thời gian</th></tr></thead>
+  <tbody>
   <% recent.forEach(r => { %>
   <tr><td><%= r.username %></td><td><%= r.title %></td><td><%= r.score %>/<%= r.total %></td><td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td></tr>
   <% }) %>
+  </tbody>
 </table>
 <%- include('partials/footer') %>

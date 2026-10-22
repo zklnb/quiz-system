@@ -1,12 +1,28 @@
 <%- include('partials/header') %>
-<span class="eyebrow">Chào mừng trở lại</span>
-<h1>Đăng nhập</h1>
-<p class="muted">Đăng nhập để tiếp tục hành trình học tập của bạn.</p>
-<% if (error) { %><div class="alert"><%= error %></div><% } %>
-<form method="post" action="/login" class="form">
-  <label>Tên đăng nhập <input name="username" required autocomplete="username"></label>
-  <label>Mật khẩu <input type="password" name="password" required autocomplete="current-password"></label>
-  <button class="btn" type="submit">Đăng nhập</button>
-  <p class="muted auth-hint">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
-</form>
+<section class="auth-layout">
+  <div class="auth-copy">
+    <span class="eyebrow">Chào mừng trở lại</span>
+    <h1>Học thêm một chút, tiến bộ mỗi ngày.</h1>
+    <p class="muted">Đăng nhập để tiếp tục hành trình học tập và xem lại kết quả của bạn.</p>
+    <div class="auth-promo" aria-hidden="true">
+      <span class="promo-spark">✦</span>
+      <span class="promo-label">Sẵn sàng thử sức?</span>
+      <div class="promo-question">Mỗi câu trả lời đúng là một bước tiến mới.</div>
+      <div class="promo-answers"><i></i><i></i><i class="active"></i></div>
+    </div>
+  </div>
+  <div class="auth-panel">
+    <div class="auth-panel-heading">
+      <span class="auth-panel-icon" aria-hidden="true">↗</span>
+      <div><h2>Đăng nhập</h2><p class="muted">Rất vui vì bạn đã quay lại.</p></div>
+    </div>
+    <% if (error) { %><div class="alert"><%= error %></div><% } %>
+    <form method="post" action="/login" class="form">
+      <label>Tên đăng nhập <input name="username" required autocomplete="username"></label>
+      <label>Mật khẩu <input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="btn" type="submit">Đăng nhập <span aria-hidden="true">&nbsp;→</span></button>
+      <p class="muted auth-hint">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+    </form>
+  </div>
+</section>
 <%- include('partials/footer') %>

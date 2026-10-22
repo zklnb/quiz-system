@@ -1,20 +1,31 @@
 <%- include('partials/header') %>
 <section class="hero">
   <div class="hero-copy">
-    <span class="eyebrow">Học nhanh · Nhớ lâu</span>
-    <h1>Kiến thức vững vàng, bắt đầu từ một câu hỏi.</h1>
-    <p>Chọn bài thi, tập trung làm bài và xem kết quả ngay sau khi nộp.</p>
-    <a class="btn" href="#quizzes">Khám phá bài thi <span aria-hidden="true">&nbsp;↓</span></a>
+    <span class="eyebrow">Góc học tập của bạn</span>
+    <h1>Thử sức hôm nay.<br><span>Tiến bộ mỗi ngày.</span></h1>
+    <p>Chọn một bài quiz, tập trung chinh phục từng câu hỏi và xem kết quả ngay sau khi nộp.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#quizzes">Khám phá bài thi <span aria-hidden="true">&nbsp;↘</span></a>
+      <span class="hero-note"><span aria-hidden="true">✦</span> Học theo cách thật thú vị</span>
+    </div>
   </div>
   <div class="hero-art" aria-hidden="true">
     <div class="quiz-illustration">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="answer"><span></span></div>
-      <div class="answer selected"><span></span></div>
-      <div class="answer"><span></span></div>
+      <div class="mock-topline"><span>QUIZ CỦA BẠN</span><span class="mock-dots">•••</span></div>
+      <div class="mock-question">Docker dùng để làm gì?</div>
+      <div class="mock-answer"><i>A</i><span>Thiết kế giao diện</span></div>
+      <div class="mock-answer mock-answer-selected"><i>B</i><span>Đóng gói ứng dụng</span><b>✓</b></div>
+      <div class="mock-answer"><i>C</i><span>Quản lý mã nguồn</span></div>
+      <div class="mock-footer"><span>✦ Đang tiến bộ</span><span>02 / 10</span></div>
     </div>
+    <span class="hero-sticker sticker-star">✦</span>
+    <span class="hero-sticker sticker-check">✓</span>
   </div>
+</section>
+<section class="feature-strip" aria-label="Điểm nổi bật">
+  <article class="feature-item"><span class="feature-icon feature-icon-purple" aria-hidden="true">?</span><div><strong>Học chủ động</strong><span>Tự chọn bài theo nhịp độ của bạn</span></div></article>
+  <article class="feature-item"><span class="feature-icon feature-icon-green" aria-hidden="true">◷</span><div><strong>Thử thách có giờ</strong><span>Tập trung và hoàn thành đúng hạn</span></div></article>
+  <article class="feature-item"><span class="feature-icon feature-icon-orange" aria-hidden="true">↗</span><div><strong>Biết kết quả ngay</strong><span>Xem điểm và đáp án sau khi nộp</span></div></article>
 </section>
 <section id="quizzes" aria-labelledby="quiz-list-title">
   <div class="section-heading">

@@ -1,8 +1,11 @@
 <%- include('partials/header') %>
-<h1><%= quiz.title %></h1>
-<p><a href="/admin">&larr; Quay lại</a></p>
+<div class="page-heading">
+  <div><a class="back-link" href="/admin">&larr; Quay lại quản trị</a><span class="eyebrow">Quản lý nội dung</span><h1><%= quiz.title %></h1><p class="muted">Thêm câu hỏi và cập nhật nội dung cho bài thi.</p></div>
+  <span class="page-heading-mark" aria-hidden="true">Q</span>
+</div>
 <form method="post" action="/admin/quiz/<%= quiz.id %>/question" class="form">
-  <h3>Thêm câu hỏi</h3>
+  <span class="eyebrow">Mở rộng ngân hàng câu hỏi</span>
+  <h2 class="form-title">Thêm câu hỏi</h2>
   <label>Nội dung <textarea name="content" required maxlength="1000"></textarea></label>
   <label>Đáp án A <input name="option_a" required maxlength="500"></label>
   <label>Đáp án B <input name="option_b" required maxlength="500"></label>
@@ -13,10 +16,13 @@
   </label>
   <button class="btn" type="submit">Thêm câu hỏi</button>
 </form>
-<h2>Danh sách câu hỏi (<%= questions.length %>)</h2>
+<div class="section-heading admin-section-heading"><div><span class="eyebrow">Nội dung bài thi</span><h2>Danh sách câu hỏi</h2></div><span class="badge"><%= questions.length %> câu</span></div>
 <% questions.forEach((qs, i) => { %>
   <div class="card">
-    <p><strong>Câu <%= i + 1 %>.</strong> <%= qs.content %></p>
+    <div class="question-heading">
+      <span class="question-number"><%= String(i + 1).padStart(2, '0') %></span>
+      <p><%= qs.content %></p>
+    </div>
     <div class="opt <%= qs.correct_option === 'A' ? 'is-correct' : '' %>">A. <%= qs.option_a %></div>
     <div class="opt <%= qs.correct_option === 'B' ? 'is-correct' : '' %>">B. <%= qs.option_b %></div>
     <div class="opt <%= qs.correct_option === 'C' ? 'is-correct' : '' %>">C. <%= qs.option_c %></div>

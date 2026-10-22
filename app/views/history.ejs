@@ -1,11 +1,28 @@
 <%- include('partials/header') %>
-<h1>Lịch sử làm bài</h1>
-<% if (!rows.length) { %><p class="muted">Bạn chưa làm bài thi nào.</p><% } else { %>
+<div class="page-heading">
+  <div><span class="eyebrow">Hành trình của bạn</span><h1>Lịch sử làm bài</h1><p class="muted">Mỗi lần thử là một cơ hội để tiến bộ thêm.</p></div>
+  <span class="page-heading-mark" aria-hidden="true">↗</span>
+</div>
+<% if (!rows.length) { %>
+  <div class="empty-state">
+    <span class="empty-state-icon" aria-hidden="true">✦</span>
+    <h2>Hành trình bắt đầu từ đây</h2>
+    <p class="muted">Bạn chưa làm bài thi nào. Chọn một bài để thử sức nhé!</p>
+    <a class="btn" href="/">Khám phá bài thi <span aria-hidden="true">&nbsp;→</span></a>
+  </div>
+<% } else { %>
 <table>
-  <tr><th>Bài thi</th><th>Điểm</th><th>Thời gian nộp</th><th></th></tr>
+  <thead><tr><th>Bài thi</th><th>Điểm</th><th>Thời gian nộp</th><th></th></tr></thead>
+  <tbody>
   <% rows.forEach(r => { %>
-  <tr><td><%= r.title %></td><td><%= r.score %>/<%= r.total %></td><td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td><td><a href="/result/<%= r.id %>">Xem</a></td></tr>
+  <tr>
+    <td><strong><%= r.title %></strong></td>
+    <td><span class="score-pill <%= r.total && r.score / r.total >= .7 ? 'score-good' : 'score-practice' %>"><%= r.score %>/<%= r.total %></span></td>
+    <td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td>
+    <td><a class="table-link" href="/result/<%= r.id %>">Xem kết quả <span aria-hidden="true">→</span></a></td>
+  </tr>
   <% }) %>
+  </tbody>
 </table>
 <% } %>
 <%- include('partials/footer') %>
