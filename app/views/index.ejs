@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">Học nhanh · Nhớ lâu</span>
+    <h1>Kiến thức vững vàng, bắt đầu từ một câu hỏi.</h1>
+    <p>Chọn bài thi, tập trung làm bài và xem kết quả ngay sau khi nộp.</p>
+    <a class="btn" href="#quizzes">Khám phá bài thi <span aria-hidden="true">&nbsp;↓</span></a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="quiz-illustration">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="answer"><span></span></div>
+      <div class="answer selected"><span></span></div>
+      <div class="answer"><span></span></div>
+    </div>
+  </div>
+</section>
+<section id="quizzes" aria-labelledby="quiz-list-title">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">Thư viện học tập</span>
+      <h2 id="quiz-list-title">Chọn bài thi của bạn</h2>
+    </div>
+    <p><%= quizzes.length %> bài thi sẵn sàng để khám phá</p>
+  </div>
+  <% if (!quizzes.length) { %><div class="card"><h3>Chưa có bài thi nào</h3><p class="muted">Các bài thi mới sẽ xuất hiện tại đây. Hãy quay lại sau nhé!</p></div><% } %>
+  <div class="grid">
+<% quizzes.forEach(z => { %>
+    <article class="card quiz-card">
+      <div class="quiz-card-top">
+        <span class="quiz-icon" aria-hidden="true">Q</span>
+        <span class="badge">Bài trắc nghiệm</span>
+      </div>
+      <h3><%= z.title %></h3>
+      <p class="description"><%= z.description || 'Sẵn sàng thử sức và củng cố kiến thức của bạn?' %></p>
+      <div class="quiz-meta">
+        <span class="badge"><%= z.num_questions %> câu hỏi</span>
+        <span class="badge"><%= z.duration_minutes %> phút</span>
+      </div>
+      <a class="btn" href="/quiz/<%= z.id %>">Bắt đầu làm bài <span aria-hidden="true">&nbsp;→</span></a>
+    </article>
+<% }) %>
+  </div>
+</section>
+<%- include('partials/footer') %>

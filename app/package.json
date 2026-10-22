@@ -1,0 +1,17 @@
+{
+  "name": "quiz-system",
+  "version": "1.0.0",
+  "description": "Hệ thống Quiz / Thi trắc nghiệm - Đề 35 (Triển khai & Quản trị HTPM)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.9.7",
+    "prom-client": "^15.1.2"
+  }
+}

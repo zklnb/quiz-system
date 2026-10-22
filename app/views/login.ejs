@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+<span class="eyebrow">Chào mừng trở lại</span>
+<h1>Đăng nhập</h1>
+<p class="muted">Đăng nhập để tiếp tục hành trình học tập của bạn.</p>
+<% if (error) { %><div class="alert"><%= error %></div><% } %>
+<form method="post" action="/login" class="form">
+  <label>Tên đăng nhập <input name="username" required autocomplete="username"></label>
+  <label>Mật khẩu <input type="password" name="password" required autocomplete="current-password"></label>
+  <button class="btn" type="submit">Đăng nhập</button>
+  <p class="muted auth-hint">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+</form>
+<%- include('partials/footer') %>

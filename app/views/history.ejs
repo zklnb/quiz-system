@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<h1>Lịch sử làm bài</h1>
+<% if (!rows.length) { %><p class="muted">Bạn chưa làm bài thi nào.</p><% } else { %>
+<table>
+  <tr><th>Bài thi</th><th>Điểm</th><th>Thời gian nộp</th><th></th></tr>
+  <% rows.forEach(r => { %>
+  <tr><td><%= r.title %></td><td><%= r.score %>/<%= r.total %></td><td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td><td><a href="/result/<%= r.id %>">Xem</a></td></tr>
+  <% }) %>
+</table>
+<% } %>
+<%- include('partials/footer') %>

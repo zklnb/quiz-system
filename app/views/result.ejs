@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+<h1>Kết quả: <%= attempt.title %></h1>
+<div class="score">Điểm: <strong><%= attempt.score %> / <%= attempt.total %></strong>
+  (<%= attempt.total ? Math.round(attempt.score * 100 / attempt.total) : 0 %>%)</div>
+<% details.forEach((d, i) => { %>
+  <div class="card <%= d.chosen_option === d.correct_option ? 'right' : 'wrong' %>">
+    <p><strong>Câu <%= i + 1 %>.</strong> <%= d.content %></p>
+    <% ['A','B','C','D'].forEach(o => { %>
+      <div class="opt <%= o === d.correct_option ? 'is-correct' : '' %> <%= (o === d.chosen_option && o !== d.correct_option) ? 'is-wrong' : '' %>">
+        <%= o %>. <%= d['option_' + o.toLowerCase()] %>
+        <% if (o === d.correct_option) { %> ✔<% } %>
+        <% if (o === d.chosen_option) { %> (bạn chọn)<% } %>
+      </div>
+    <% }) %>
+    <% if (!d.chosen_option) { %><p class="muted">Bạn chưa trả lời câu này.</p><% } %>
+  </div>
+<% }) %>
+<a class="btn" href="/">Về trang chủ</a>
+<%- include('partials/footer') %>

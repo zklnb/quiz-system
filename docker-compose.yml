@@ -1,0 +1,139 @@
+# ============================================================
+#  Hệ thống Quiz / Thi trắc nghiệm - Đề 35
+#  File gốc: Web app + MySQL + phpMyAdmin + Nginx (Commit 1)
+#  Giám sát: docker-compose.monitoring.yml (Commit 2)
+#  Log tập trung: docker-compose.logging.yml (Commit 3)
+#  Các file được gộp tự động qua biến COMPOSE_FILE trong .env
+# ============================================================
+name: quiz-system
+
+services:
+  # ---- Sinh chứng chỉ HTTPS tự ký (chạy 1 lần rồi thoát) ----
+  cert-gen:
+    image: alpine/openssl:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ ! -f /certs/server.crt ]; then
+          openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
+            -keyout /certs/server.key -out /certs/server.crt \
+            -subj "/C=VN/O=Quiz System/CN=localhost" \
+            -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+        fi
+        chown 101:101 /certs/server.key /certs/server.crt
+        chmod 600 /certs/server.key
+        chmod 644 /certs/server.crt
+    volumes:
+      - certs:/certs
+    restart: "no"
+    networks: [frontend]
+
+  # ---- Cơ sở dữ liệu MySQL ----
+  mysql:
+    image: mysql:8.0
+    container_name: quiz-mysql
+    restart: unless-stopped
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --local-infile=0
+      --skip-symbolic-links
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?thiếu MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-quizdb}
+      MYSQL_USER: ${DB_USER:-quizapp}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?thiếu DB_PASSWORD}
+      EXPORTER_DB_PASSWORD: ${EXPORTER_DB_PASSWORD:?thiếu EXPORTER_DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 768m
+    networks: [backend]            # mạng nội bộ, không có đường ra Internet
+
+  # ---- Công cụ quản lý DB: phpMyAdmin ----
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: quiz-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_ARBITRARY: 0
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${PMA_PORT:-8081}:80"
+    depends_on:
+      mysql: { condition: service_healthy }
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    networks: [backend, frontend]
+
+  # ---- Ứng dụng web Quiz (Node.js/Express) ----
+  webapp:
+    build: ./app
+    image: quiz-webapp:1.0
+    container_name: quiz-webapp
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_NAME: ${DB_NAME:-quizdb}
+      DB_USER: ${DB_USER:-quizapp}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?thiếu JWT_SECRET}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?thiếu ADMIN_PASSWORD}
+    depends_on:
+      mysql: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    # Hardening
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 384m
+    networks: [frontend, backend, monitoring]
+
+  # ---- Nginx reverse proxy (non-root) ----
+  nginx:
+    image: nginxinc/nginx-unprivileged:1.27-alpine
+    container_name: quiz-nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:8080"
+      - "${HTTPS_PORT:-443}:8443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/proxy_params.conf:/etc/nginx/proxy_params.conf:ro
+      - certs:/etc/nginx/certs:ro
+    depends_on:
+      cert-gen: { condition: service_completed_successfully }
+      webapp: { condition: service_healthy }
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 128m
+    networks: [frontend, monitoring]
+
+# ---- Network isolation ----
+networks:
+  frontend:                     # phía người dùng: nginx, webapp, phpmyadmin
+  backend:
+    internal: true              # DB nằm trong mạng cô lập hoàn toàn
+  monitoring:                   # Prometheus/Grafana/Loki và các exporter
+
+volumes:
+  mysql_data:
+  certs:
+  prometheus_data:
+  grafana_data:
+  loki_data:

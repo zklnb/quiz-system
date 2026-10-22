@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+<section class="quiz-intro">
+  <span class="eyebrow">Đang làm bài thi</span>
+  <h1><%= quiz.title %></h1>
+  <p><%= quiz.description %></p>
+</section>
+<div class="quiz-progress-label">
+  <span>Tiến độ bài làm</span>
+  <span id="answered-count">0 / <%= questions.length %> câu đã trả lời</span>
+</div>
+<progress class="quiz-progress" id="quiz-progress" aria-label="Tiến độ bài làm" value="0" max="<%= questions.length %>" data-total="<%= questions.length %>"></progress>
+<div class="timer" id="timer" data-seconds="<%= quiz.duration_minutes * 60 %>">Thời gian còn lại: <span id="time-left"></span></div>
+<form method="post" action="/quiz/<%= quiz.id %>/submit" id="quiz-form">
+<% questions.forEach((qs, i) => { %>
+  <div class="card question">
+    <div class="question-heading">
+      <span class="question-number"><%= String(i + 1).padStart(2, '0') %></span>
+      <p><%= qs.content %></p>
+    </div>
+    <% ['a','b','c','d'].forEach(o => { %>
+      <label class="opt"><input type="radio" name="q_<%= qs.id %>" value="<%= o.toUpperCase() %>"> <%= o.toUpperCase() %>. <%= qs['option_' + o] %></label>
+    <% }) %>
+  </div>
+<% }) %>
+<% if (questions.length) { %><div class="quiz-submit-row"><button class="btn" type="submit" data-confirm="Bạn chắc chắn muốn nộp bài?">Nộp bài thi <span aria-hidden="true">&nbsp;→</span></button></div><% } else { %><p class="muted">Bài thi chưa có câu hỏi.</p><% } %>
+</form>
+<script src="/quiz.js"></script>
+<%- include('partials/footer') %>
