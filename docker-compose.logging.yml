@@ -1,0 +1,26 @@
+# ===== Commit 3: Loki + Promtail (log tập trung) =====
+services:
+  loki:
+    image: grafana/loki:3.1.0
+    container_name: quiz-loki
+    restart: unless-stopped
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - loki_data:/loki
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    networks: [monitoring]          # không publish cổng ra host
+
+  promtail:
+    image: grafana/promtail:3.1.0
+    container_name: quiz-promtail
+    restart: unless-stopped
+    command: ["-config.file=/etc/promtail/promtail-config.yaml"]
+    volumes:
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro   # chỉ đọc, để khám phá container
+    depends_on: [loki]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    networks: [monitoring]
